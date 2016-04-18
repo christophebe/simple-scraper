@@ -54,7 +54,7 @@ function init(options, callback) {
 }
 
 /**
- *
+ * Scrape all pages defined in the options
  *
  *
  * @param
