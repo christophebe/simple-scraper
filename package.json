@@ -1,0 +1,19 @@
+{
+  "name": "simple-scraper",
+  "version": "1.0.0",
+  "description": "A simple web scraper",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "preTest" : "rm -rf ./logs"
+  },
+  "author": "Christophe Lombart",
+  "license": "MIT",
+  "dependencies": {
+    "async": "*",
+    "cheerio": "*",
+    "request": "*",
+    "underscore": "*",
+    "crawler-ninja-logger": "*"
+  }
+}
