@@ -125,7 +125,13 @@ function checkPage(options, error, response, body, allLinks, callback) {
         var $ = cheerio.load(body);
 
         options.scrapePage(options.url, $, function(error, links){
-          allLinks = allLinks.concat(links);
+
+          if (error) {
+              logError("Error during scraping the page", options.url, options, error);
+          }
+          else {
+            allLinks = allLinks.concat(links);
+          }
           scrapeNextPage(options, allLinks, $, callback);
         });
 
@@ -134,6 +140,10 @@ function checkPage(options, error, response, body, allLinks, callback) {
 function scrapeNextPage(options, allLinks, $, callback) {
   if (options.nextPageUrl) {
     options.nextPageUrl(options.url, $, function(error, pageUrl) {
+      if (error) {
+        logError("Error when trying to find the nextpage", options.url, options, error);
+        return callback(null, allLinks);
+      }
       if (pageUrl) {
           var nextPageOptions = _.pick(options, 'headers', 'proxy', 'delay', 'jar');
           if (options.proxyList) {
@@ -164,7 +174,7 @@ function logInfo(message, url, options) {
 }
 
 function logError(message, url, options, error) {
-  log.error({module : "simple-scraper", message : message, url : url , error : error, options});
+  log.error({module : "simple-scraper", message : message, url : url , error : error, options: options});
 }
 
 

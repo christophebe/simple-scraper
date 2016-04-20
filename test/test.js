@@ -53,6 +53,5 @@ function nextPageUrl(url, $, callback) {
      return $(this).text().trim() === 'Next';
    }).parent().attr("href");
 
-   //console.log("nextpage", link);
    callback(null, "http://www.infobel.com" + link);
 }
