@@ -65,13 +65,13 @@ var log     = require('crawler-ninja-logger').Logger;
      */
     function httpRequests(options, callback) {
 
-          async.map(options.urls,
+          async.each(options.urls,
               function(url,callback) {
 
                 var urlOptions = _.clone(options);
                 urlOptions.url = url;
                 //urlOptions.headers = options.headers;
-                httpRequest(urlOptions, [], callback);
+                httpRequest(urlOptions, callback);
               },
               callback
           );
@@ -86,18 +86,18 @@ var log     = require('crawler-ninja-logger').Logger;
      * @param the already found links
      * @callback(error, links)
      */
-    function httpRequest(options, allLinks, callback) {
+    function httpRequest(options, callback) {
 
         if (options.delay) {
            //console.log("Wait between request : " + options.delay);
-           setTimeout(execRequest, options.delay, options, allLinks, callback);
+           setTimeout(execRequest, options.delay, options, callback);
         }
         else {
-           execRequest(options, allLinks, callback);
+           execRequest(options, callback);
         }
     }
 
-    function execRequest(options, allLinks, callback) {
+    function execRequest(options, callback) {
         // Proxy rotation
         if(options.proxyList) {
           options.proxy = options.proxyList.pick().getUrl();
@@ -105,43 +105,40 @@ var log     = require('crawler-ninja-logger').Logger;
 
         logInfo("Http Request",  options.url, options);
         request(options, function(error, response, body){
-              checkPage(options, error, response, body, allLinks, callback);
+              checkPage(options, error, response, body, callback);
         });
     }
 
 
-    function checkPage(options, error, response, body, allLinks, callback) {
+    function checkPage(options, error, response, body, callback) {
 
             if (error) {
               logError("Error during request", options.url, options, error);
-              return callback(null, allLinks);
+              return callback();
             }
 
             if (response.statusCode !== 200) {
               logError("Invalid HTTP code : " + response.statusCode, options.url, options);
-              return callback(null, allLinks);
+              return callback();
             }
 
             var $ = cheerio.load(body);
 
-            scrapePagefn(options.url, $, function(error, links) {
+            scrapePagefn(options.url, $, function(error) {
                 if (error) {
                     logError("Error during scraping the page", options.url, options, error);
                 }
-                else {
-                  allLinks = allLinks.concat(links);
-                }
-                scrapeNextPage(options, allLinks, $, callback);
+                scrapeNextPage(options, $, callback);
             });
 
     }
 
-    function scrapeNextPage(options, allLinks, $, callback) {
+    function scrapeNextPage(options, $, callback) {
       if (nextPageUrlfn) {
         nextPageUrlfn(options.url, $, function(error, pageUrl) {
           if (error) {
             logError("Error when trying to find the nextpage", options.url, options, error);
-            return callback(null, allLinks);
+            return callback();
           }
           if (pageUrl) {
               var nextPageOptions = _.clone(options);
@@ -150,18 +147,18 @@ var log     = require('crawler-ninja-logger').Logger;
                 nextPageOptions.proxy = null;
               }
               nextPageOptions.url = pageUrl;
-              return execRequest(nextPageOptions, allLinks, callback);
+              return execRequest(nextPageOptions, callback);
 
           }
           else {
             logInfo("no next page to scrape", options.url, options);
-            callback(null, allLinks);
+            callback();
           }
         });
       }
       else {
         logInfo("no next page function", options.url, options);
-        return callback(null, allLinks);
+        return callback();
       }
     }
 

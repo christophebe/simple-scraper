@@ -5,7 +5,7 @@ var scraper     = require("../index.js");
 
 
 
-describe('Test Scrape with proxy', function() {
+describe.skip('Test Scrape with proxy', function() {
 
         var proxyList = null;
 
@@ -24,7 +24,7 @@ describe('Test Scrape with proxy', function() {
         });
 
 
-        it.skip('Sould Scrape a couple of pages on infobel via proxies', function(done) {
+        it('Sould Scrape a couple of pages on infobel via proxies', function(done) {
             this.timeout(400000);
             var options = {
                urls : ["http://www.infobel.com/fr/belgium/business/120400/societe_de_credit",
@@ -35,7 +35,7 @@ describe('Test Scrape with proxy', function() {
                proxyList : proxyList
             };
 
-            scraper.scrape(options, scrapePage, nextPageUrl, function(error, results){
+            scraper.scrape(options, scrapeInfobelPage, nextPageInfobelUrl, function(error, results){
                   if (error) {
                     console.log(error);
                   }
@@ -49,7 +49,7 @@ describe('Test Scrape with proxy', function() {
         });
 });
 
-function scrapePage(url, $, callback) {
+function scrapeInfobelPage(url, $, callback) {
     console.log("Scrape Page", url);
     var links = [];
 
@@ -64,7 +64,7 @@ function scrapePage(url, $, callback) {
 }
 
 
-function nextPageUrl(url, $, callback) {
+function nextPageInfobelUrl(url, $, callback) {
   var link = $('.sr-only').filter(function() {
      return $(this).text().trim() === 'Next';
    }).parent().attr("href");
