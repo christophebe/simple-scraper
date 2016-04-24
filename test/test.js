@@ -62,7 +62,7 @@ function scrapePage(url, $, callback) {
         });
     },
     function(error){
-      callback(null, links);
+      callback();
     });
 }
 
