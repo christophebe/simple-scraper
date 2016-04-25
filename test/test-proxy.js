@@ -5,7 +5,7 @@ var scraper     = require("../index.js");
 
 
 
-describe.skip('Test Scrape with proxy', function() {
+describe('Test Scrape with proxy', function() {
 
         var proxyList = null;
 

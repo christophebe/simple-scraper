@@ -5,11 +5,12 @@ var _       = require("underscore");
 var log     = require('crawler-ninja-logger').Logger;
 
 
-(function(){
+function scrape(options, scrapePage, nextPageUrl, callback){
     var DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1';
-    var scrapePagefn;
-    var nextPageUrlfn;
+    var scrapePagefn = scrapePage;
+    var nextPageUrlfn  = nextPageUrl;
 
+    start(options, scrapePage, nextPageUrl, callback);
 
     /**
      * Scrape pages on a website
@@ -22,10 +23,7 @@ var log     = require('crawler-ninja-logger').Logger;
      *
      * @param callback(error, allLinks) // result : the allLinks produice by the scrapePage function
      */
-    function scrape(options, scrapePage, nextPageUrl, callback) {
-
-      scrapePagefn = scrapePage;
-      nextPageUrlfn = nextPageUrl;
+    function start(options, scrapePage, nextPageUrl, callback) {
 
       async.waterfall([
           async.apply(init, options),
@@ -170,7 +168,6 @@ var log     = require('crawler-ninja-logger').Logger;
       log.error({module : "simple-scraper", message : message, url : url , error : error, options: options});
     }
 
+}
 
-    module.exports.scrape = scrape;
-
-})();
+module.exports.scrape = scrape;
