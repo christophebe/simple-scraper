@@ -27,7 +27,7 @@ describe('Test Scrape with proxy', function() {
         it('Sould Scrape a couple of pages on infobel via proxies', function(done) {
             this.timeout(400000);
             var options = {
-               urls : ["http://www.infobel.com/fr/belgium/business/120400/societe_de_credit",
+               urls : ["http://www.infobel.com/fr/belgium/business/120400/societe_de_credit/97",
                        //"http://www.infobel.com/fr/belgium/business/120200/assurance",
                        //"http://www.infobel.com/fr/belgium/business/120600/legal_et_financier_investissements"
                      ],
@@ -68,6 +68,8 @@ function nextPageInfobelUrl(url, $, callback) {
   var link = $('.sr-only').filter(function() {
      return $(this).text().trim() === 'Next';
    }).parent().attr("href");
-
-   callback(null, "http://www.infobel.com" + link);
+   if (link) {
+     link = "http://www.infobel.com" + link;
+   }
+   callback(null, link);
 }

@@ -161,10 +161,16 @@ function scrape(options, scrapePage, nextPageUrl, callback){
     }
 
     function logInfo(message, url, options) {
-      log.info({module : "simple-scraper", message : message, url : url, options : options});
+      //Remove the list of proxies for the log
+      var opt = _.omit(options, "proxyList");
+
+      log.info({module : "simple-scraper", message : message, url : url, options : opt});
     }
 
     function logError(message, url, options, error) {
+      //Remove the list of proxies for the log
+      var opt = _.omit(options, "proxyList");
+      
       log.error({module : "simple-scraper", message : message, url : url , error : error, options: options});
     }
 
